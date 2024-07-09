@@ -4,9 +4,11 @@ teaching: 20
 exercises: 20
 questions:
 - "How do I modify the default behavior of Apptainer when entering a container?"
+- "How can I submit batch jobs when inside an Apptainer container?"
 - "How can I use Apptainer when I'm already inside an Apptainer container?"
 objectives:
 - "Learn how to add custom prompts to your shell logon file and detect if you're inside a container."
+- "Learn how to run commands on the host machine while still inside a container."
 - "Learn how to tell if your Apptainer installation can run nested containers (Apptainer-in-Apptainer)."
 ---
 
@@ -35,12 +37,27 @@ Whether in your login file or another script, you might want to have certain ope
 You can achieve this with a simple check (replace `...` with your code):
 
 ~~~bash
-if [ -n "$SINGULARITY_CONTAINER" ]; then
+if [ -n "$APPTAINER_CONTAINER" ]; then
     ...
 fi
 ~~~
 
 To reverse the check, use `-z` instead of `-n` ([guide to bash comparison operators](https://tldp.org/LDP/abs/html/comparison-ops.html)).
+
+# Using batch systems with Apptainer
+
+Most containers do not include the HTCondor executables or configuration files.
+There are several options to work around this, in order to continue to use legacy job submission code that may depend on software that only runs on older operating systems (e.g. `CMSSW_10_6_X`).
+
+1. Keep another terminal open in the host OS (outside of the container) and only execute batch commands there. This can be very tedious, so in general, it is *not recommended*.
+1. Build a new container that includes HTCondor. An example of this option can be found at [https://gitlab.cern.ch/cms-cat/cmssw-lxplus](cmssw-lxplus) (aimed at CERN lxplus). While this allows the use of batch systems transparently, it requires exactly replicating the host machine's HTCondor configuration. It also does not scale well, because each possible container must be rebuilt whenever the container is updated, and potentially by each user (if the rebuilt containers are not distributed centrally). Therefore, in general, this option is *not recommended*.
+1. Use the [`call_host` software](https://github.com/FNALLPC/lpc-scripts?tab=readme-ov-file#call_hostsh), which allows executing commands on the host OS while *still inside* the container. `call_host` is set up by default to handle HTCondor commands, as well as EOS filesystem commands, but it can handle any command (that doesn't require tty input).
+1. Use the HTCondor Python bindings, which can be installed more easily inside most containers. The HTCondor configuration from the host OS must be correctly mounted inside the container. An example of this can be found at [lpcjobqueue](https://github.com/CoffeaTeam/lpcjobqueue). This option works very well for some operations, but if a site is using customized HTCondor scripts, the bindings will not pick up the customizations.
+
+> ## Going deeper
+> 
+> Read the instructions for the [`call_host` software](https://github.com/FNALLPC/lpc-scripts?tab=readme-ov-file#call_hostsh), install it on the cluster you usually use, and try it out. Besides HTCondor, what other commands are useful to call on the host?
+{: .callout}
 
 # Apptainer-in-Apptainer
 
