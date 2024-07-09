@@ -54,6 +54,15 @@ There are several options to work around this, in order to continue to use legac
 1. Use the [`call_host` software](https://github.com/FNALLPC/lpc-scripts?tab=readme-ov-file#call_hostsh), which allows executing commands on the host OS while *still inside* the container. `call_host` is set up by default to handle HTCondor commands, as well as EOS filesystem commands, but it can handle any command (that doesn't require tty input).
 1. Use the HTCondor Python bindings, which can be installed more easily inside most containers. The HTCondor configuration from the host OS must be correctly mounted inside the container. An example of this can be found at [lpcjobqueue](https://github.com/CoffeaTeam/lpcjobqueue). This option works very well for some operations, but if a site is using customized HTCondor scripts, the bindings will not pick up the customizations.
 
+> ## Using containers in a batch job
+> 
+> HTCondor supports Apptainer ([documentation](https://htcondor.readthedocs.io/en/lts/admin-manual/singularity-support.html)). You can specify an Apptainer (or Docker) container that a job should use with the ClassAd:
+> ~~~
+> +SingularityImage = "..."
+> ~~~
+> Some sites also have site-specific ClassAds for you to specify just the target OS so it can find the right container automatically, but these are not standardized.
+{: .testimonial}
+
 > ## Going deeper
 > 
 > Read the instructions for the [`call_host` software](https://github.com/FNALLPC/lpc-scripts?tab=readme-ov-file#call_hostsh), install it on the cluster you usually use, and try it out. Besides HTCondor, what other commands are useful to call on the host?
