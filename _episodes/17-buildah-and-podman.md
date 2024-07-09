@@ -5,7 +5,7 @@ exercises: 30
 questions:
 - "Why should I use Buildah and Podman?"
 - "Are these cross-platform solutions?"
-- "What limitation or extras do Buildah and Podman posses compared to Moby BuildKit and Docker?"
+- "What limitation or extras do Buildah and Podman possess compared to Moby BuildKit and Docker?"
 objectives:
 - "Be able to choose for yourself whether Buildah and Podman are right for your workflow."
 - "Learn how to use Podman and Buildah as replacements for Docker."
