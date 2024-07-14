@@ -74,7 +74,7 @@ automatically done when running the `cmssw-env` command.
 > >
 > > ~~~bash
 > > cat /etc/redhat-release
-> > cmssw-cc8 --bind `readlink -f ${HOME}/nobackup/`
+> > cmssw-cc8 --bind /uscms_data
 > > cat /etc/redhat-release
 > > ls /eos/uscms/store/user/${USER}
 > > ls ${HOME}
@@ -91,11 +91,11 @@ The CMS script discussed above is "nice-to-have" and works well if you simply wa
 
 As an example, we are going to run a container using the `ubuntu:latest` image. Before running Apptainer, you should set the cache directory (i.e.
 the directory to which the images are being pulled) to a
-place outside your `$HOME`/AFS space (here we use the `~/nobackup` directory):
+place outside your `$HOME` space (here we use the `~/nobackup` directory):
 
 ~~~bash
 export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
-apptainer shell -B `readlink $HOME` -B `readlink -f ${HOME}/nobackup/` -B /cvmfs docker://ubuntu:latest
+apptainer shell -B `readlink $HOME` -B /uscms_data -B /cvmfs docker://ubuntu:latest
 # try accessing cvmfs inside of the container
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 ~~~
@@ -145,7 +145,7 @@ In the next example, we are executing a script with Apptainer using the same ima
 ~~~bash
 export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
 echo -e '#!/bin/bash\n\necho "Hello World!"\n' > hello_world.sh
-apptainer exec -B `readlink $HOME` -B `readlink -f ${HOME}/nobackup/` docker://ubuntu:latest bash hello_world.sh
+apptainer exec -B `readlink $HOME` -B /uscms_data docker://ubuntu:latest bash hello_world.sh
 ~~~
 {: .source}
 
@@ -192,7 +192,7 @@ Once we have the sandbox we can use that when starting the container. Run the sa
 
 ~~~bash
 export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
-apptainer exec -B `readlink $HOME` -B `readlink -f ${HOME}/nobackup/` ubuntu/ bash hello_world.sh
+apptainer exec -B `readlink $HOME` -B /uscms_data ubuntu/ bash hello_world.sh
 ~~~
 {: .source}
 
@@ -222,7 +222,7 @@ Knowing how to authenticate will be important when pulling images from GitLab. F
 
 ~~~bash
 export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
-apptainer shell -B `readlink $HOME` -B `readlink -f ${HOME}/nobackup/` docker://gitlab-registry.cern.ch/[repo owner's username]/[repo name]:[tag] --docker-login
+apptainer shell -B `readlink $HOME` -B /uscms_data docker://gitlab-registry.cern.ch/[repo owner's username]/[repo name]:[tag] --docker-login
 ~~~
 {: .source}
 
@@ -252,7 +252,7 @@ Of course there are many more packages installed in these images than just PyTor
 > 
 > You can start Jupyter Notebook using the `apptainer exec` command, passing the directive `jupyter notebook --no-browser --port <port_number>` at the end of the command. Apptainer, unlike Docker, doesn't require explicit port mapping. For example:
 > ~~~bash
-> apptainer exec --nv --bind $PWD:/run/user --bind `readlink -f ${HOME}/nobackup/` /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity jupyter notebook --no-browser --port 1234
+> apptainer exec --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity jupyter notebook --no-browser --port 1234
 > ~~~
 > {: .source}
 {: .callout}
@@ -266,7 +266,7 @@ A word of warning, these images are rather large (about 5 GB compressed). For th
 > > ~~~bash
 > > ssh -Y <username>@cmslpcgpu<2-3>.fnal.gov
 > > export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
-> > apptainer shell --nv --bind $PWD:/run/user --bind `readlink -f ${HOME}/nobackup/` /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity
+> > apptainer shell --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity
 > > ~~~
 > > {: .source}
 > > Create a script called `testPytorch.py` which has the following content:
