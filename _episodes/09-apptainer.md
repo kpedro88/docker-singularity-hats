@@ -252,7 +252,7 @@ Of course there are many more packages installed in these images than just PyTor
 > 
 > You can start Jupyter Notebook using the `apptainer exec` command, passing the directive `jupyter notebook --no-browser --port <port_number>` at the end of the command. Apptainer, unlike Docker, doesn't require explicit port mapping. For example:
 > ~~~bash
-> apptainer exec --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity jupyter notebook --no-browser --port 1234
+> apptainer exec --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.9.0-cuda11.1-cudnn8-runtime-singularity jupyter notebook --no-browser --port 1234
 > ~~~
 > {: .source}
 {: .callout}
@@ -266,7 +266,7 @@ A word of warning, these images are rather large (about 5 GB compressed). For th
 > > ~~~bash
 > > ssh -Y <username>@cmslpcgpu<2-3>.fnal.gov
 > > export APPTAINER_CACHEDIR="`readlink -f ~/nobackup/`/.apptainer/cache"
-> > apptainer shell --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.8.1-cuda11.1-cudnn8-runtime-singularity
+> > apptainer shell --nv --bind $PWD:/run/user --bind /uscms_data /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.9.0-cuda11.1-cudnn8-runtime-singularity
 > > ~~~
 > > {: .source}
 > > Create a script called `testPytorch.py` which has the following content:
